@@ -11,7 +11,7 @@ class VehicleDriverInline(admin.StackedInline):
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
     inlines = [VehicleDriverInline]
-
+    readonly_fields = ['using']
 
 @admin.register(Driver)
 class DriverAdmin(admin.ModelAdmin):

@@ -18,6 +18,11 @@ class Vehicle(models.Model):
     def __repr__(self):
         return f"Car({self.id} - {self.mark} {self.model})"
 
+    def save(self, *args, **kwargs):
+        super(Vehicle, self).save(*args, **kwargs)
+        self.using = True if VehicleDriver.objects.filter(vehicle_id=self.id) else False
+        super(Vehicle, self).save(*args, **kwargs)
+
 
 class VehicleDriver(models.Model):
     vehicle = models.ForeignKey(
@@ -44,6 +49,12 @@ class Driver(models.Model):
 
     def __repr__(self) -> str:
         return f"Driver({self.first_name} {self.last_name})"
+
+    def get_license_list(self):
+        return self.driving_license.all()
+
+    def get_license(self):
+        return self.driving_license.all()[0]
 
     class Meta:
         verbose_name = 'Driver'
