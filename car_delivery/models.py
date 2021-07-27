@@ -13,10 +13,19 @@ class Vehicle(models.Model):
     drivers_limit = models.PositiveSmallIntegerField(verbose_name='Vehicle drivers limit', default=1)
 
     def __str__(self) -> str:
-        return f"Car#{self.id} - {self.mark} {self.model}."
+        return f"Car#{self.id} - {self.mark} {self.model} Category: {self.driving_category}."
 
     def __repr__(self):
         return f"Car({self.id} - {self.mark} {self.model})"
+
+    def save(self, *args, **kwargs):
+        super(Vehicle, self).save(*args, **kwargs)
+        drivers = VehicleDriver.objects.filter(vehicle_id=self.id)
+        self.using = True if drivers else False
+        return super(Vehicle, self).save(*args, **kwargs)
+
+    def get_drivers_count(self):
+        return self.vehicledriver_set.count()
 
 
 class VehicleDriver(models.Model):
@@ -33,6 +42,15 @@ class VehicleDriver(models.Model):
         related_query_name='driver_vehicle_driver'
     )
 
+    @staticmethod
+    def get_available_vehicles(self):
+        return Vehicle.objects.filter(using=False)
+
+    def save(self, *args, **kwargs):
+        super(VehicleDriver, self).save(*args, **kwargs)
+        self.vehicle.using = True
+        self.vehicle.save()
+
 
 class Driver(models.Model):
     first_name = models.CharField(max_length=100, verbose_name='Driver firstname')
@@ -40,16 +58,14 @@ class Driver(models.Model):
     driving_license = models.ManyToManyField('DrivingLicense', verbose_name='Driving license')
 
     def __str__(self) -> str:
-        return f"Driver#{self.id} {self.first_name} {self.last_name}."
+        return f"Driver#{self.id} {self.first_name} {self.last_name} " \
+               f"Categories: {[category.title for category in self.driving_license.all()]}."
 
     def __repr__(self) -> str:
         return f"Driver({self.first_name} {self.last_name})"
 
     def get_license_list(self):
-        return self.driving_license.all()
-
-    def get_license(self):
-        return self.driving_license.all()[0]
+        return [driver_license for driver_license in self.driving_license.all()]
 
     class Meta:
         verbose_name = 'Driver'

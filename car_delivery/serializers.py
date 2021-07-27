@@ -1,5 +1,7 @@
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from .models import Vehicle, Driver, DrivingLicense, VehicleDriver
+from .services import VehicleDriverService
 
 
 class DrivingLicenseSerializer(ModelSerializer):
@@ -34,6 +36,10 @@ class VehicleDriverSerializer(ModelSerializer):
 
 
 class VehicleDriverCreateSerializer(ModelSerializer):
+    def save(self, **kwargs):
+        checker = VehicleDriverService(self.validated_data['vehicle'], self.validated_data['driver'])
+        checker.check_all()
+        return super(VehicleDriverCreateSerializer, self).save(**kwargs)
 
     class Meta:
         model = VehicleDriver

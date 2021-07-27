@@ -58,9 +58,9 @@ class VehicleDriverListView(generics.ListAPIView):
 
 
 class VehicleDriverCreateView(generics.CreateAPIView):
-    queryset = Vehicle.objects.filter(using=False)
     serializer_class = VehicleDriverCreateSerializer
     permission_classes = [IsAdminUser]
+    queryset = VehicleDriver.objects.all()
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
