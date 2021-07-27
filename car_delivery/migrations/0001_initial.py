@@ -43,20 +43,20 @@ class Migration(migrations.Migration):
                 ('mark', models.CharField(max_length=100, verbose_name='Car mark title')),
                 ('using', models.BooleanField(default=False, editable=False, verbose_name='Car in use flag')),
                 ('drivers_limit', models.PositiveSmallIntegerField(default=1, verbose_name='Car drivers limit')),
-                ('driving_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='CarDelivery.drivinglicense', verbose_name='Required driving category')),
+                ('driving_category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='car_delivery.drivinglicense', verbose_name='Required driving category')),
             ],
         ),
         migrations.CreateModel(
             name='VehicleDriver',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('driver', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_query_name='driver_vehicle_driver', to='CarDelivery.driver', verbose_name='Driver')),
-                ('vehicle', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_query_name='vehicle_vehicle_driver', to='CarDelivery.vehicle', verbose_name='Vehicle')),
+                ('driver', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_query_name='driver_vehicle_driver', to='car_delivery.driver', verbose_name='Driver')),
+                ('vehicle', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_query_name='vehicle_vehicle_driver', to='car_delivery.vehicle', verbose_name='Vehicle')),
             ],
         ),
         migrations.AddField(
             model_name='driver',
             name='driving_license',
-            field=models.ManyToManyField(to='CarDelivery.DrivingLicense', verbose_name='Driving license'),
+            field=models.ManyToManyField(to='car_delivery.DrivingLicense', verbose_name='Driving license'),
         ),
     ]

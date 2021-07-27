@@ -23,7 +23,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'CarDelivery',
+    'car_delivery',
+    'auth_system',
 ]
 
 MIDDLEWARE = [
@@ -64,6 +65,8 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+AUTH_USER_MODEL = 'auth_system.User'
 
 
 AUTH_PASSWORD_VALIDATORS = [
