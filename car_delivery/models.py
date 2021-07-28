@@ -42,10 +42,10 @@ class Race(models.Model):
         verbose_name='Driver',
         related_query_name='driver_vehicle_driver'
     )
-    pickup_time = models.DateTimeField(verbose_name='Race start date and time.')
-    supply_time = models.DateTimeField(verbose_name='Race end date and time.')
-    pickup_location = models.CharField(max_length=300, verbose_name='Race products pickup location.')
-    supply_location = models.CharField(max_length=300, verbose_name='Race products supply location.')
+    pickup_time = models.DateTimeField(verbose_name='Race start date and time')
+    supply_time = models.DateTimeField(verbose_name='Race end date and time')
+    pickup_location = models.CharField(max_length=300, verbose_name='Race products pickup location')
+    supply_location = models.CharField(max_length=300, verbose_name='Race products supply location')
     race_status_choices = [
         ('S', 'STARTED'),
         ('P', 'PENDING'),

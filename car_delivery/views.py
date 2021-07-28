@@ -57,7 +57,7 @@ class VehicleDriverListView(generics.ListAPIView):
         return Race.objects.all()
 
 
-class VehicleDriverCreateView(generics.CreateAPIView):
+class RaceCreateView(generics.CreateAPIView):
     serializer_class = RaceCreateSerializer
     permission_classes = [IsAdminUser]
     queryset = Race.objects.all()
