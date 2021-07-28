@@ -87,7 +87,7 @@ class DriverRaceListView(generics.ListAPIView):
 
     def get_queryset(self):
         queries = {
-            'races': Race.objects.filter(driver__user=self.request.user, status='S'),
+            'current': Race.objects.filter(driver__user=self.request.user, status='S'),
             'scheduled': Race.objects.filter(status='P', driver__user=self.request.user),
             'ended': Race.objects.filter(status='E', driver__user=self.request.user)
         }
