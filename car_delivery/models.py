@@ -21,7 +21,7 @@ class Vehicle(models.Model):
         return f"Car({self.id} - {self.mark} {self.model})"
 
     @property
-    def get_drivers_count(self):
+    def get_drivers_count(self) -> int:
         return len(set(list(map(lambda x: x.driver, self.race_set.all()))))
 
 
@@ -50,7 +50,7 @@ class Race(models.Model):
     status = models.CharField(max_length=1, choices=RaceChoice.choices, default='P')
 
     @staticmethod
-    def get_available_vehicles(self):
+    def get_available_vehicles(self) -> Vehicle:
         return Vehicle.objects.filter(using=False)
 
     def __str__(self) -> str:
@@ -79,7 +79,7 @@ class Driver(models.Model):
         return f"Driver({self.first_name} {self.last_name})"
 
     @property
-    def get_license_list(self):
+    def get_license_list(self) -> list:
         return [driver_license for driver_license in self.driving_license.all()]
 
     class Meta:

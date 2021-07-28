@@ -11,21 +11,21 @@ class RaceCreationValidator:
         self.driver = data.get('driver')
         self.pickup_time = data.get('pickup_time')
 
-    def check_limit_availability(self):
+    def check_limit_availability(self) -> None:
         if self.vehicle.drivers_limit <= self.vehicle.get_drivers_count:
             raise serializers.ValidationError("This car has reached max drivers limit.")
 
-    def check_driver_busy(self):
+    def check_driver_busy(self) -> None:
         race_list = [race for race in self.driver.race_set.all()]
         for race in race_list:
             if race.supply_time >= self.pickup_time:
                 raise serializers.ValidationError("This driver already has race at this time.")
 
-    def check_driving_category(self):
+    def check_driving_category(self) -> None:
         if self.vehicle.driving_category not in self.driver.get_license_list:
             raise serializers.ValidationError("Driver has not required driving license.")
 
-    def check_all(self):
+    def check_all(self) -> None:
         self.check_driver_busy()
         self.check_limit_availability()
         self.check_driving_category()
@@ -33,10 +33,9 @@ class RaceCreationValidator:
 
 @receiver(pre_delete, sender=Race)
 @receiver(post_save, sender=Race)
-def update_vehicle_status(sender, instance, **kwargs):
+def update_vehicle_status(sender, instance, **kwargs) -> None:
     vehicle = Vehicle.objects.filter(id=instance.vehicle.id).first()
     race_list = Race.objects.filter(vehicle_id=instance.vehicle.id)
     if vehicle:
         vehicle.using = True if not vehicle.using and race_list else False
         vehicle.save()
-
