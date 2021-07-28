@@ -1,0 +1,35 @@
+[
+  {
+    "model": "car_delivery.Vehicle",
+    "pk": 1,
+    "fields": {
+      "model": "Accent",
+      "mark": "Hyundai",
+      "driving_category": 1,
+      "using": false,
+      "drivers_limit": 1
+    }
+  },
+  {
+    "model": "car_delivery.Vehicle",
+    "pk": 2,
+    "fields": {
+      "model": "Sonata",
+      "mark": "Hyundai",
+      "driving_category": 1,
+      "using": false,
+      "drivers_limit": 3
+    }
+  },
+  {
+    "model": "car_delivery.Vehicle",
+    "pk": 3,
+    "fields": {
+      "model": "Octavia",
+      "mark": "Skoda",
+      "driving_category": 1,
+      "using": true,
+      "drivers_limit": 1
+    }
+  }
+]

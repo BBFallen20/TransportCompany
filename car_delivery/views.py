@@ -2,8 +2,8 @@ from rest_framework import generics
 from rest_framework.permissions import IsAdminUser
 from rest_framework.views import Response
 
-from .models import Vehicle, Driver, VehicleDriver
-from .serializers import VehicleSerializer, DriverSerializer, VehicleDriverSerializer, VehicleDriverCreateSerializer
+from .models import Vehicle, Driver, Race
+from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
 
 
 class VehicleListView(generics.ListAPIView):
@@ -46,21 +46,21 @@ class DriverListView(generics.ListAPIView):
 
 class VehicleDriverListView(generics.ListAPIView):
     """Vehicle-driver relation objects list API"""
-    serializer_class = VehicleDriverSerializer
+    serializer_class = RaceSerializer
 
     def list(self, request) -> Response:
         vehicles_drivers = self.get_queryset()
-        serializer = VehicleDriverSerializer(vehicles_drivers, many=True, context={'request': request})
+        serializer = RaceSerializer(vehicles_drivers, many=True, context={'request': request})
         return Response(serializer.data)
 
     def get_queryset(self) -> Vehicle:
-        return VehicleDriver.objects.all()
+        return Race.objects.all()
 
 
 class VehicleDriverCreateView(generics.CreateAPIView):
-    serializer_class = VehicleDriverCreateSerializer
+    serializer_class = RaceCreateSerializer
     permission_classes = [IsAdminUser]
-    queryset = VehicleDriver.objects.all()
+    queryset = Race.objects.all()
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)

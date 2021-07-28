@@ -1,0 +1,23 @@
+[
+  {
+    "model": "car_delivery.DrivingLicense",
+    "pk": 1,
+    "fields": {
+      "title": "A"
+    }
+  },
+  {
+    "model": "car_delivery.DrivingLicense",
+    "pk": 2,
+    "fields": {
+      "title": "B"
+    }
+  },
+  {
+    "model": "car_delivery.DrivingLicense",
+    "pk": 3,
+    "fields": {
+      "title": "C"
+    }
+  }
+]

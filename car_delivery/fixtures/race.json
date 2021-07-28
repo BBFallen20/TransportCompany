@@ -1,0 +1,15 @@
+[
+  {
+    "model": "car_delivery.Race",
+    "pk": 1,
+    "fields": {
+      "vehicle": 3,
+      "driver": 1,
+      "pickup_time": "2021-09-10 20:00:00",
+      "supply_time": "2021-09-10 20:00:00",
+      "pickup_location": "Ukraine, Zaporizhzya, Schilna 12, 69003",
+      "supply_location": "Ukraine, Zaporizhzya, Charivna 155, 69003",
+      "status": "P"
+    }
+  }
+]

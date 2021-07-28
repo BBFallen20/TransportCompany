@@ -1,11 +1,16 @@
 from django.contrib import admin
-from .models import Vehicle, Driver, DrivingLicense, VehicleDriver
+from .models import Vehicle, Driver, DrivingLicense, Race
 
 
 class VehicleDriverInline(admin.StackedInline):
-    model = VehicleDriver
+    model = Race
     fields = ['driver']
     extra = 1
+
+
+@admin.register(Race)
+class RaceAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Vehicle)
@@ -21,8 +26,9 @@ class VehicleAdmin(admin.ModelAdmin):
         obj = self.after_saving_model_and_related_inlines(obj)
         return super(VehicleAdmin, self).response_change(request, obj)
 
+    @staticmethod
     def after_saving_model_and_related_inlines(self, obj):
-        drivers = VehicleDriver.objects.filter(vehicle=obj.id)
+        drivers = Race.objects.filter(vehicle=obj.id)
         obj.using = True if drivers else False
         obj.save()
         return obj
@@ -36,6 +42,3 @@ class DriverAdmin(admin.ModelAdmin):
 @admin.register(DrivingLicense)
 class DrivingLicenseAdmin(admin.ModelAdmin):
     pass
-
-
-

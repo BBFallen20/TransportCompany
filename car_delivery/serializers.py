@@ -1,7 +1,6 @@
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .models import Vehicle, Driver, DrivingLicense, VehicleDriver
-from .services import VehicleDriverCreationValidator
+from .models import Vehicle, Driver, DrivingLicense, Race
+from .services import RaceCreationValidator
 
 
 class DrivingLicenseSerializer(ModelSerializer):
@@ -26,21 +25,21 @@ class DriverSerializer(ModelSerializer):
         fields = ['first_name', 'last_name', 'license_list']
 
 
-class VehicleDriverSerializer(ModelSerializer):
+class RaceSerializer(ModelSerializer):
     vehicle = VehicleSerializer()
     driver = DriverSerializer()
 
     class Meta:
-        model = VehicleDriver
+        model = Race
         fields = ['vehicle', 'driver']
 
 
-class VehicleDriverCreateSerializer(ModelSerializer):
+class RaceCreateSerializer(ModelSerializer):
     def save(self, **kwargs):
-        error_checker = VehicleDriverCreationValidator(self.validated_data['vehicle'], self.validated_data['driver'])
+        error_checker = RaceCreationValidator(self.validated_data['vehicle'], self.validated_data['driver'])
         error_checker.check_all()
-        return super(VehicleDriverCreateSerializer, self).save(**kwargs)
+        return super(RaceCreateSerializer, self).save(**kwargs)
 
     class Meta:
-        model = VehicleDriver
+        model = Race
         fields = ['vehicle', 'driver']

@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 
-class VehicleDriverCreationValidator:
+class RaceCreationValidator:
     def __init__(self, vehicle, driver):
         self.vehicle = vehicle
         self.driver = driver
