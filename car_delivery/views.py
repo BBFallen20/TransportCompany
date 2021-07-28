@@ -74,7 +74,6 @@ class RaceCreateView(generics.CreateAPIView):
         creating = super(RaceCreateView, self).create(request, *args, **kwargs)
         if creating.status_code == 201:
             transaction.savepoint_commit(sid)
-            update_vehicle_status(request.POST.get('vehicle')[0])
             return creating
         else:
             transaction.savepoint_rollback(sid)
@@ -87,10 +86,10 @@ class DriverRaceListView(generics.ListAPIView):
 
     def get_queryset(self):
         queries = {
+            None: Race.objects.filter(driver__user=self.request.user),
             'started': Race.objects.filter(driver__user=self.request.user, status='S'),
-            'pending': Race.objects.filter(status='P', driver__user=self.request.user),
-            'ended': Race.objects.filter(status='E', driver__user=self.request.user),
-            None: Race.objects.filter(driver__user=self.request.user, status='S')
+            'pending': Race.objects.filter(driver__user=self.request.user, status='P'),
+            'ended': Race.objects.filter(driver__user=self.request.user, status='E')
         }
         return queries.get(self.kwargs.get('status'))
 

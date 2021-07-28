@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import Vehicle, Driver, DrivingLicense, Race
 
 
-class VehicleDriverInline(admin.StackedInline):
+class RaceInline(admin.StackedInline):
     model = Race
     fields = ['driver']
     extra = 1
@@ -15,15 +15,15 @@ class RaceAdmin(admin.ModelAdmin):
 
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
-    inlines = [VehicleDriverInline]
+    inlines = [RaceInline]
     readonly_fields = ['using']
 
     def response_add(self, request, new_object):
-        obj = self.after_saving_model_and_related_inlines(new_object)
+        obj = self.after_saving_model_and_related_inlines(request, new_object)
         return super(VehicleAdmin, self).response_add(request, obj)
 
     def response_change(self, request, obj):
-        obj = self.after_saving_model_and_related_inlines(obj)
+        obj = self.after_saving_model_and_related_inlines(request, obj)
         return super(VehicleAdmin, self).response_change(request, obj)
 
     @staticmethod

@@ -1,3 +1,5 @@
+from django.db.models.signals import post_save, pre_delete
+from django.dispatch import receiver
 from rest_framework import serializers
 
 from car_delivery.models import Race, Vehicle
@@ -10,7 +12,7 @@ class RaceCreationValidator:
         self.pickup_time = data.get('pickup_time')
 
     def check_limit_availability(self):
-        if self.vehicle.drivers_limit <= self.vehicle.get_drivers_count():
+        if self.vehicle.drivers_limit <= self.vehicle.get_drivers_count:
             raise serializers.ValidationError("This car has reached max drivers limit.")
 
     def check_driver_busy(self):
@@ -20,7 +22,7 @@ class RaceCreationValidator:
                 raise serializers.ValidationError("This driver already has race at this time.")
 
     def check_driving_category(self):
-        if self.vehicle.driving_category not in self.driver.get_license_list():
+        if self.vehicle.driving_category not in self.driver.get_license_list:
             raise serializers.ValidationError("Driver has not required driving license.")
 
     def check_all(self):
@@ -29,9 +31,12 @@ class RaceCreationValidator:
         self.check_driving_category()
 
 
-def update_vehicle_status(vehicle_id):
-    vehicle = Vehicle.objects.filter(id=vehicle_id).first()
+@receiver(pre_delete, sender=Race)
+@receiver(post_save, sender=Race)
+def update_vehicle_status(sender, instance, **kwargs):
+    vehicle = Vehicle.objects.filter(id=instance.vehicle.id).first()
+    race_list = Race.objects.filter(vehicle_id=instance.vehicle.id)
     if vehicle:
-        if not vehicle.using:
-            vehicle.using = True
-            vehicle.save()
+        vehicle.using = True if not vehicle.using and race_list else False
+        vehicle.save()
+

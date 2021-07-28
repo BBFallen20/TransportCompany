@@ -20,12 +20,7 @@ class Vehicle(models.Model):
     def __repr__(self) -> str:
         return f"Car({self.id} - {self.mark} {self.model})"
 
-    def save(self, *args, **kwargs):
-        super(Vehicle, self).save(*args, **kwargs)
-        drivers = Race.objects.filter(vehicle_id=self.id)
-        self.using = True if drivers else False
-        return super(Vehicle, self).save(*args, **kwargs)
-
+    @property
     def get_drivers_count(self):
         return len(set(list(map(lambda x: x.driver, self.race_set.all()))))
 
@@ -36,7 +31,6 @@ class Race(models.Model):
         PENDING = 'P', 'PENDING'
         ENDED = 'E', 'ENDED'
         CANCELED = 'C', 'CANCELED'
-
     vehicle = models.ForeignKey(
         'Vehicle',
         on_delete=models.CASCADE,
@@ -84,6 +78,7 @@ class Driver(models.Model):
     def __repr__(self) -> str:
         return f"Driver({self.first_name} {self.last_name})"
 
+    @property
     def get_license_list(self):
         return [driver_license for driver_license in self.driving_license.all()]
 
