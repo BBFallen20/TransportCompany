@@ -26,7 +26,7 @@ class Vehicle(models.Model):
         return super(Vehicle, self).save(*args, **kwargs)
 
     def get_drivers_count(self):
-        return self.race_set.count()
+        return len(set(list(map(lambda x: x.driver, self.race_set.all()))))
 
 
 class Race(models.Model):
@@ -58,10 +58,16 @@ class Race(models.Model):
     def get_available_vehicles(self):
         return Vehicle.objects.filter(using=False)
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         super(Race, self).save(*args, **kwargs)
         self.vehicle.using = True
         self.vehicle.save()
+
+    def __str__(self) -> str:
+        return f"Race#{self.id} {self.pickup_time}-{self.supply_time}"
+
+    def __repr__(self) -> str:
+        return f"Race({self.id} {self.pickup_time}-{self.supply_time})"
 
 
 class Driver(models.Model):
