@@ -87,11 +87,12 @@ class DriverRaceListView(generics.ListAPIView):
 
     def get_queryset(self):
         queries = {
-            'current': Race.objects.filter(driver__user=self.request.user, status='S'),
-            'scheduled': Race.objects.filter(status='P', driver__user=self.request.user),
-            'ended': Race.objects.filter(status='E', driver__user=self.request.user)
+            'started': Race.objects.filter(driver__user=self.request.user, status='S'),
+            'pending': Race.objects.filter(status='P', driver__user=self.request.user),
+            'ended': Race.objects.filter(status='E', driver__user=self.request.user),
+            None: Race.objects.filter(driver__user=self.request.user, status='S')
         }
-        return queries.get(self.request.get_full_path().split('/')[1:-1][-1])
+        return queries.get(self.kwargs.get('status'))
 
     @is_driver
     def list(self, request, *args, **kwargs):
