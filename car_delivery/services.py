@@ -1,5 +1,6 @@
 from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
 from car_delivery.models import Race, Vehicle
@@ -13,17 +14,17 @@ class RaceCreationValidator:
 
     def check_limit_availability(self) -> None:
         if self.vehicle.drivers_limit <= self.vehicle.get_drivers_count:
-            raise serializers.ValidationError("This car has reached max drivers limit.")
+            raise serializers.ValidationError(_("This car has reached max drivers limit."))
 
     def check_driver_busy(self) -> None:
         race_list = [race for race in self.driver.race_set.all()]
         for race in race_list:
             if race.supply_time >= self.pickup_time:
-                raise serializers.ValidationError("This driver already has race at this time.")
+                raise serializers.ValidationError(_("This driver already has race at this time."))
 
     def check_driving_category(self) -> None:
         if self.vehicle.driving_category not in self.driver.get_license_list:
-            raise serializers.ValidationError("Driver has not required driving license.")
+            raise serializers.ValidationError(_("Driver has not required driving license."))
 
     def check_all(self) -> None:
         self.check_driver_busy()

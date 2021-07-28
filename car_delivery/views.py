@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.views import Response
@@ -6,7 +7,6 @@ from rest_framework.views import Response
 from profiles.services import is_driver
 from .models import Vehicle, Driver, Race
 from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
-from .services import update_vehicle_status
 
 
 class VehicleListView(generics.ListAPIView):
@@ -77,7 +77,7 @@ class RaceCreateView(generics.CreateAPIView):
             return creating
         else:
             transaction.savepoint_rollback(sid)
-            return Response({'detail': 'Error while creating a race.'}, 400)
+            return Response({_('detail'): _('Error while creating a race.')}, 400)
 
 
 class DriverRaceListView(generics.ListAPIView):
