@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator
 from django.db import models
 
@@ -16,7 +17,7 @@ class Vehicle(models.Model):
     def __str__(self) -> str:
         return f"Car#{self.id} - {self.mark} {self.model} Category: {self.driving_category}."
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Car({self.id} - {self.mark} {self.model})"
 
     def save(self, *args, **kwargs):
@@ -30,6 +31,12 @@ class Vehicle(models.Model):
 
 
 class Race(models.Model):
+    class RaceChoice(models.TextChoices):
+        STARTED = 'S', 'STARTED'
+        PENDING = 'P', 'PENDING'
+        ENDED = 'E', 'ENDED'
+        CANCELED = 'C', 'CANCELED'
+
     vehicle = models.ForeignKey(
         'Vehicle',
         on_delete=models.CASCADE,
@@ -46,28 +53,17 @@ class Race(models.Model):
     supply_time = models.DateTimeField(verbose_name='Race end date and time')
     pickup_location = models.CharField(max_length=300, verbose_name='Race products pickup location')
     supply_location = models.CharField(max_length=300, verbose_name='Race products supply location')
-    race_status_choices = [
-        ('S', 'STARTED'),
-        ('P', 'PENDING'),
-        ('E', 'ENDED'),
-        ('C', 'CANCELED'),
-    ]
-    status = models.CharField(max_length=1, choices=race_status_choices, default='P')
+    status = models.CharField(max_length=1, choices=RaceChoice.choices, default='P')
 
     @staticmethod
     def get_available_vehicles(self):
         return Vehicle.objects.filter(using=False)
 
-    def save(self, *args, **kwargs) -> None:
-        super(Race, self).save(*args, **kwargs)
-        self.vehicle.using = True
-        self.vehicle.save()
-
     def __str__(self) -> str:
-        return f"Race#{self.id} {self.pickup_time}-{self.supply_time}"
+        return f"Race#{self.id} {self.status} {self.pickup_time}-{self.supply_time}"
 
     def __repr__(self) -> str:
-        return f"Race({self.id} {self.pickup_time}-{self.supply_time})"
+        return f"Race(id:{self.id} {self.status} {self.pickup_time}-{self.supply_time})"
 
 
 class Driver(models.Model):
@@ -79,6 +75,7 @@ class Driver(models.Model):
         validators=[MaxValueValidator(100)],
         default=0
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='User')
 
     def __str__(self) -> str:
         return f"Driver#{self.id} {self.first_name} {self.last_name} " \

@@ -1,0 +1,11 @@
+[
+  {
+    "model": "auth.group",
+    "fields": {
+      "name": "driver",
+      "permissions": [
+        29,45,46,47,48
+      ]
+    }
+  }
+]

@@ -1,9 +1,12 @@
+from django.db import transaction
 from rest_framework import generics
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.views import Response
 
+from profiles.services import is_driver
 from .models import Vehicle, Driver, Race
 from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
+from .services import update_vehicle_status
 
 
 class VehicleListView(generics.ListAPIView):
@@ -44,13 +47,13 @@ class DriverListView(generics.ListAPIView):
         return Driver.objects.all()
 
 
-class VehicleDriverListView(generics.ListAPIView):
+class AllRaceListView(generics.ListAPIView):
     """Vehicle-driver relation objects list API"""
     serializer_class = RaceSerializer
 
     def list(self, request) -> Response:
-        vehicles_drivers = self.get_queryset()
-        serializer = RaceSerializer(vehicles_drivers, many=True, context={'request': request})
+        races = self.get_queryset()
+        serializer = RaceSerializer(races, many=True, context={'request': request})
         return Response(serializer.data)
 
     def get_queryset(self) -> Vehicle:
@@ -64,3 +67,34 @@ class RaceCreateView(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        sid = transaction.savepoint()
+        creating = super(RaceCreateView, self).create(request, *args, **kwargs)
+        if creating.status_code == 201:
+            transaction.savepoint_commit(sid)
+            update_vehicle_status(request.POST.get('vehicle')[0])
+            return creating
+        else:
+            transaction.savepoint_rollback(sid)
+            return Response({'detail': 'Error while creating a race.'}, 400)
+
+
+class DriverRaceListView(generics.ListAPIView):
+    serializer_class = RaceSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queries = {
+            'races': Race.objects.filter(driver__user=self.request.user, status='S'),
+            'scheduled': Race.objects.filter(status='P', driver__user=self.request.user),
+            'ended': Race.objects.filter(status='E', driver__user=self.request.user)
+        }
+        return queries.get(self.request.get_full_path().split('/')[1:-1][-1])
+
+    @is_driver
+    def list(self, request, *args, **kwargs):
+        races = self.get_queryset()
+        serializer = RaceSerializer(races, many=True, context={'request': request})
+        return Response(serializer.data)

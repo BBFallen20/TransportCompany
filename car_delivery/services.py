@@ -1,8 +1,10 @@
 from rest_framework import serializers
 
+from car_delivery.models import Race, Vehicle
+
 
 class RaceCreationValidator:
-    def __init__(self, data):
+    def __init__(self, data: dict):
         self.vehicle = data.get('vehicle')
         self.driver = data.get('driver')
         self.pickup_time = data.get('pickup_time')
@@ -25,3 +27,11 @@ class RaceCreationValidator:
         self.check_driver_busy()
         self.check_limit_availability()
         self.check_driving_category()
+
+
+def update_vehicle_status(vehicle_id):
+    vehicle = Vehicle.objects.filter(id=vehicle_id).first()
+    if vehicle:
+        if not vehicle.using:
+            vehicle.using = True
+            vehicle.save()

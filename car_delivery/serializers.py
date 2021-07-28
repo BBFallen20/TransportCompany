@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from rest_framework.fields import CharField
 
+from profiles.serializers import UserSerializer
 from .models import Vehicle, Driver, DrivingLicense, Race
 from .services import RaceCreationValidator
 
@@ -21,10 +22,11 @@ class VehicleSerializer(ModelSerializer):
 
 class DriverSerializer(ModelSerializer):
     license_list = DrivingLicenseSerializer(source='get_license_list', many=True)
+    user = UserSerializer()
 
     class Meta:
         model = Driver
-        fields = ['first_name', 'last_name', 'license_list', 'rating']
+        fields = ['first_name', 'last_name', 'license_list', 'rating', 'user']
 
 
 class RaceSerializer(ModelSerializer):
