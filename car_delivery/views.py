@@ -32,8 +32,8 @@ class VehicleUnusedListView(generics.ListAPIView):
         serializer = VehicleSerializer(cars, many=True, context={"request": request})
         return Response(serializer.data)
 
-    def get_queryset(self) -> Vehicle:
-        return Vehicle.objects.filter(using=False)
+    def get_queryset(self) -> list:
+        return [vehicle if vehicle.get_drivers_count == 0 else None for vehicle in Vehicle.objects.all()]
 
 
 class DriverListView(generics.ListAPIView):
