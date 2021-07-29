@@ -7,6 +7,7 @@ from car_delivery.models import Race, Vehicle
 
 
 class RaceCreationValidator:
+    """Race objects creating validator. C"""
     def __init__(self, data: dict):
         self.vehicle = data.get('vehicle')
         self.driver = data.get('driver')
@@ -36,7 +37,7 @@ class RaceCreationValidator:
 @receiver(post_save, sender=Race)
 def update_vehicle_status(sender, instance, **kwargs) -> None:
     vehicle = Vehicle.objects.filter(id=instance.vehicle.id).first()
-    race_list = Race.objects.filter(vehicle_id=instance.vehicle.id)
     if vehicle:
+        race_list = Race.objects.filter(vehicle_id=vehicle.id)
         vehicle.using = True if not vehicle.using and race_list else False
         vehicle.save()

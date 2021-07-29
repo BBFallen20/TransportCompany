@@ -65,11 +65,11 @@ class RaceCreateView(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
     queryset = Race.objects.all()
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> Response:
         return self.create(request, *args, **kwargs)
 
     @transaction.atomic
-    def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs) -> Response:
         sid = transaction.savepoint()
         creating = super(RaceCreateView, self).create(request, *args, **kwargs)
         if creating.status_code == 201:
@@ -77,14 +77,14 @@ class RaceCreateView(generics.CreateAPIView):
             return creating
         else:
             transaction.savepoint_rollback(sid)
-            return Response({_('detail'): _('Error while creating a race.')}, 400)
+            return Response({'detail': _('Error while creating a race.')}, 400)
 
 
 class DriverRaceListView(generics.ListAPIView):
     serializer_class = RaceSerializer
     permission_classes = [IsAuthenticated]
 
-    def get_queryset(self):
+    def get_queryset(self) -> Race or None:
         queries = {
             None: Race.objects.filter(driver__user=self.request.user),
             'started': Race.objects.filter(driver__user=self.request.user, status='S'),
@@ -94,7 +94,7 @@ class DriverRaceListView(generics.ListAPIView):
         return queries.get(self.kwargs.get('status'))
 
     @is_driver
-    def list(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs) -> Response:
         races = self.get_queryset()
         serializer = RaceSerializer(races, many=True, context={'request': request})
         return Response(serializer.data)
