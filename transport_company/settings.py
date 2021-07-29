@@ -91,7 +91,7 @@ DATABASES = {
 
         'USER': 'ubkpcngtdhzojh',
 
-        'PASSWORD': 'd5cf65a4bfbd24b4b5c2a290c66d13fb07cbfb9fb95db834767d2d087f1acf50',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
 
         'HOST': 'ec2-44-194-225-27.compute-1.amazonaws.com',
 
