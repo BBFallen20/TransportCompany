@@ -6,8 +6,7 @@
       "first_name": "Anton",
       "last_name": "Antonovich",
       "driving_license": "1",
-      "rating": 0,
-      "user": 1
+      "rating": 0
     }
   },
   {
@@ -17,8 +16,7 @@
       "first_name": "Pavel",
       "last_name": "Pavlovich",
       "driving_license": "1",
-      "rating": 0,
-      "user": 1
+      "rating": 0
     }
   }
 ]

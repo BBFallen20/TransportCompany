@@ -5,16 +5,18 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.views import Response
 
 from profiles.services import is_driver
-from .models import Vehicle, Driver, Race
+from .models import Vehicle, Race
+from profiles.models import DriverProfile
 from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
 
 
 class VehicleListView(generics.ListAPIView):
     """Vehicle objects list API"""
+    serializer_class = VehicleSerializer
 
     def list(self, request) -> Response:
         cars = self.get_queryset()
-        serializer = VehicleSerializer(cars, many=True, context={"request": request})
+        serializer = self.serializer_class(cars, many=True, context={"request": request})
         return Response(serializer.data)
 
     def get_queryset(self) -> Vehicle:
@@ -44,7 +46,7 @@ class DriverListView(generics.ListAPIView):
         return Response(serializer.data)
 
     def get_queryset(self) -> Vehicle:
-        return Driver.objects.all()
+        return DriverProfile.objects.all()
 
 
 class AllRaceListView(generics.ListAPIView):
@@ -65,13 +67,10 @@ class RaceCreateView(generics.CreateAPIView):
     permission_classes = [IsAdminUser]
     queryset = Race.objects.all()
 
-    def post(self, request, *args, **kwargs) -> Response:
-        return self.create(request, *args, **kwargs)
-
     @transaction.atomic
-    def create(self, request, *args, **kwargs) -> Response:
+    def post(self, request, *args, **kwargs) -> Response:
         sid = transaction.savepoint()
-        creating = super(RaceCreateView, self).create(request, *args, **kwargs)
+        creating = self.create(request, *args, **kwargs)
         if creating.status_code == 201:
             transaction.savepoint_commit(sid)
             return creating

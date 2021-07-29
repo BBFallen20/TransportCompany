@@ -1,10 +1,10 @@
 from django.contrib import admin
-from .models import Vehicle, Driver, DrivingLicense, Race
+from .models import Vehicle, DrivingLicense, Race
 
 
 class RaceInline(admin.StackedInline):
     model = Race
-    fields = ['driver']
+    fields = ['driver', 'supply_time', 'pickup_time', 'status', 'supply_location', 'pickup_location']
     extra = 1
 
 
@@ -16,27 +16,6 @@ class RaceAdmin(admin.ModelAdmin):
 @admin.register(Vehicle)
 class VehicleAdmin(admin.ModelAdmin):
     inlines = [RaceInline]
-    readonly_fields = ['using']
-
-    def response_add(self, request, new_object):
-        obj = self.after_saving_model_and_related_inlines(request, new_object)
-        return super(VehicleAdmin, self).response_add(request, obj)
-
-    def response_change(self, request, obj):
-        obj = self.after_saving_model_and_related_inlines(request, obj)
-        return super(VehicleAdmin, self).response_change(request, obj)
-
-    @staticmethod
-    def after_saving_model_and_related_inlines(self, obj):
-        drivers = Race.objects.filter(vehicle=obj.id)
-        obj.using = True if drivers else False
-        obj.save()
-        return obj
-
-
-@admin.register(Driver)
-class DriverAdmin(admin.ModelAdmin):
-    pass
 
 
 @admin.register(DrivingLicense)

@@ -2,7 +2,8 @@ from rest_framework.serializers import ModelSerializer
 from rest_framework.fields import CharField
 
 from profiles.serializers import UserSerializer
-from .models import Vehicle, Driver, DrivingLicense, Race
+from .models import Vehicle, DrivingLicense, Race
+from profiles.models import DriverProfile
 from .services import RaceCreationValidator
 
 
@@ -25,7 +26,7 @@ class DriverSerializer(ModelSerializer):
     user = UserSerializer()
 
     class Meta:
-        model = Driver
+        model = DriverProfile
         fields = ['first_name', 'last_name', 'license_list', 'rating', 'user']
 
 

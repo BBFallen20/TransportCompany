@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.generic import TemplateView
 from rest_auth.registration.views import VerifyEmailView
+from rest_framework.schemas import get_schema_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,5 +19,14 @@ urlpatterns = [
         VerifyEmailView.as_view(),
         name='account_confirm_email'
     ),
-    path('api/delivery/', include('car_delivery.urls'))
+    path('api/delivery/', include('car_delivery.urls')),
+    path('openapi', get_schema_view(
+                title="Transport company",
+                description="API for delivery system",
+                version="0.0.1"
+            ), name='openapi-schema'),
+    path('swagger-ui/', TemplateView.as_view(
+            template_name='swagger-ui.html',
+            extra_context={'schema_url': 'openapi-schema'}
+        ), name='swagger-ui'),
 ]
