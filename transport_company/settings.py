@@ -1,5 +1,4 @@
 import os
-import django_heroku
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -85,8 +84,19 @@ WSGI_APPLICATION = 'transport_company.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'd887emcfqvs67p',
+
+        'USER': 'ubkpcngtdhzojh',
+
+        'PASSWORD': 'd5cf65a4bfbd24b4b5c2a290c66d13fb07cbfb9fb95db834767d2d087f1acf50',
+
+        'HOST': 'ec2-44-194-225-27.compute-1.amazonaws.com',
+
+        'PORT': '5432',
+
     }
 }
 
@@ -120,5 +130,3 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-django_heroku.settings(locals())
