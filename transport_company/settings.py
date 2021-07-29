@@ -50,6 +50,9 @@ SITE_ID = 1
 REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ['iso-8601', '%Y-%m-%dT%H:%M:%S.%fZ'],
 }
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'profiles.serializers.CustomRegisterSerializer',
+}
 AUTH_USER_MODEL = 'profiles.User'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -84,19 +87,8 @@ WSGI_APPLICATION = 'transport_company.wsgi.application'
 
 DATABASES = {
     'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'd887emcfqvs67p',
-
-        'USER': 'ubkpcngtdhzojh',
-
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-
-        'HOST': 'ec2-44-194-225-27.compute-1.amazonaws.com',
-
-        'PORT': '5432',
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
