@@ -84,19 +84,8 @@ WSGI_APPLICATION = 'transport_company.wsgi.application'
 
 DATABASES = {
     'default': {
-
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'd887emcfqvs67p',
-
-        'USER': 'ubkpcngtdhzojh',
-
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-
-        'HOST': 'ec2-44-194-225-27.compute-1.amazonaws.com',
-
-        'PORT': '5432',
-
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
