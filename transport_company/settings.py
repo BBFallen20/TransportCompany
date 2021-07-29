@@ -50,6 +50,9 @@ SITE_ID = 1
 REST_FRAMEWORK = {
     'DATE_INPUT_FORMATS': ['iso-8601', '%Y-%m-%dT%H:%M:%S.%fZ'],
 }
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'profiles.serializers.CustomRegisterSerializer',
+}
 AUTH_USER_MODEL = 'profiles.User'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

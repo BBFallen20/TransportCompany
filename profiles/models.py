@@ -10,6 +10,8 @@ class User(AbstractUser):
         GUEST = _('G'), _('GUEST')
     role = models.CharField(max_length=1, choices=RoleChoice.choices, default='G', verbose_name='User role')
 
+    REQUIRED_FIELDS = ['email', 'role']
+
 
 class DriverProfile(models.Model):
     user = models.OneToOneField('User', on_delete=models.CASCADE, verbose_name=_('User'))
