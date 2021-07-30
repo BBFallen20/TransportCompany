@@ -37,8 +37,10 @@ class DriverProfileCommentListView(ListAPIView):
 
     def get_queryset(self):
         driver_profile = DriverProfile.objects.filter(user=self.kwargs.get('pk')).first()
-        comments = ProfileComment.objects.filter(
-            profile_id=driver_profile.id,
-            comment_profile=ContentType.objects.get_for_model(driver_profile).id,
-        )
+        comments = []
+        if driver_profile:
+            comments = ProfileComment.objects.filter(
+                profile_id=driver_profile.id,
+                comment_profile=ContentType.objects.get_for_model(driver_profile).id,
+            )
         return comments
