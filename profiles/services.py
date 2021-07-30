@@ -17,6 +17,22 @@ class DriverProfileUpdateValidator:
             raise serializers.ValidationError({"detail": _("You can change only your profile.")})
 
 
+class ProfileCommentValidator:
+    def __init__(self, user_id: int, profile_mode: str):
+        self.user_id = user_id
+        self.profiles_getters = {'driver': self.get_driver_profile}
+        self.profile_mode = profile_mode
+
+    def get_driver_profile(self) -> DriverProfile:
+        return DriverProfile.objects.filter(user__id=self.user_id).first()
+
+    def get_profile_comments(self):
+        profile = self.profiles_getters.get(self.profile_mode)()
+        if profile:
+            return profile.comments.exclude(parent_comment__isnull=False)
+        raise serializers.ValidationError({'detail': "Profile not found."})
+
+
 def is_driver(func):
     def outer(self, request, **kwargs):
         if request.user.RoleChoice.DRIVER == request.user.role:

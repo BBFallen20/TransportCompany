@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from .models import DriverProfile, ProfileComment
 from .serializers import UpdateDriverProfileSerializer, DriverProfileCommentSerializer
-from .services import is_driver, DriverProfileUpdateValidator
+from .services import is_driver, DriverProfileUpdateValidator, ProfileCommentValidator
 
 
 class DriverProfileUpdateView(UpdateAPIView):
@@ -37,11 +37,4 @@ class DriverProfileCommentListView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        driver_profile = DriverProfile.objects.filter(user__id=self.kwargs.get('pk')).first()
-        if driver_profile:
-            comments = ProfileComment.objects.filter(
-                profile_id=driver_profile.id,
-                comment_profile=ContentType.objects.get_for_model(driver_profile).id,
-            )
-            return comments
-        raise serializers.ValidationError({'detail': "Profile not found."})
+        return ProfileCommentValidator(self.kwargs.get('pk'), 'driver').get_profile_comments()
