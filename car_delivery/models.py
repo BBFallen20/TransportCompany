@@ -52,10 +52,6 @@ class Race(models.Model):
     supply_location = models.CharField(max_length=300, verbose_name=_('Race products supply location'))
     status = models.CharField(max_length=1, choices=RaceChoice.choices, default='P', verbose_name=_('Race status'))
 
-    @staticmethod
-    def get_available_vehicles(self) -> Vehicle:
-        return Vehicle.objects.filter(using=False)
-
     def __str__(self) -> str:
         return f"Race#{self.id} {self.status} {self.pickup_time}-{self.supply_time}"
 

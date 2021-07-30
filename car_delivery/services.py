@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import serializers
 
@@ -14,8 +16,8 @@ class RaceCreationValidator:
     def check_limit_availability(self) -> None:
         drivers_current_time_count = 0
         for race in self.vehicle.race_set.all():
-            if race.supply_time >= self.supply_time <= race.supply_time and \
-                    race.pickup_time >= self.pickup_time <= race.pickup_time:
+            if race.supply_time >= datetime.strptime(self.supply_time, '%Y-%m-%d %H:%M:%S') <= race.supply_time and \
+                    race.pickup_time >= datetime.strptime(self.pickup_time, '%Y-%m-%d %H:%M:%S') <= race.pickup_time:
                 drivers_current_time_count += 1
         if self.vehicle.drivers_limit <= drivers_current_time_count:
             raise serializers.ValidationError(_("This car has reached max drivers limit."))
@@ -23,7 +25,7 @@ class RaceCreationValidator:
     def check_driver_busy(self) -> None:
         race_list = [race for race in self.driver.race_set.all()]
         for race in race_list:
-            if race.supply_time >= self.pickup_time:
+            if race.supply_time >= datetime.strptime(self.pickup_time, '%Y-%m-%d %H:%M:%S'):
                 raise serializers.ValidationError(_("This driver already has race at this time."))
 
     def check_driving_category(self) -> None:

@@ -1,11 +1,9 @@
-from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from rest_framework import serializers
 from rest_framework.generics import UpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import DriverProfile, ProfileComment
+from .models import DriverProfile
 from .serializers import UpdateDriverProfileSerializer, DriverProfileCommentSerializer
 from .services import is_driver, DriverProfileUpdateValidator, ProfileCommentValidator
 
