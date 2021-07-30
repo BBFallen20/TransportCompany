@@ -36,7 +36,7 @@ class DriverProfileCommentListView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        driver_profile = DriverProfile.objects.filter(user=self.request.user).first()
+        driver_profile = DriverProfile.objects.get(id=self.kwargs.get('pk'))
         comments = ProfileComment.objects.filter(
             profile_id=driver_profile.id,
             comment_profile=ContentType.objects.get_for_model(driver_profile).id,
