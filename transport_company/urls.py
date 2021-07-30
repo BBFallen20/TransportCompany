@@ -20,6 +20,7 @@ urlpatterns = [
         name='account_confirm_email'
     ),
     path('api/delivery/', include('car_delivery.urls')),
+    path('api/profiles/', include('profiles.urls')),
     path('openapi', get_schema_view(
                 title="Transport company",
                 description="API for delivery system",

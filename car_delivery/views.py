@@ -69,14 +69,7 @@ class RaceCreateView(generics.CreateAPIView):
 
     @transaction.atomic
     def post(self, request, *args, **kwargs) -> Response:
-        sid = transaction.savepoint()
-        creating = self.create(request, *args, **kwargs)
-        if creating.status_code == 201:
-            transaction.savepoint_commit(sid)
-            return creating
-        else:
-            transaction.savepoint_rollback(sid)
-            return Response({'detail': _('Error while creating a race.')}, 400)
+        return self.create(request, *args, **kwargs)
 
 
 class DriverRaceListView(generics.ListAPIView):

@@ -1,9 +1,20 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import ugettext_lazy as _
+from rest_framework import serializers
 from rest_framework.response import Response
 
 from profiles.models import User, DriverProfile
+
+
+class DriverProfileUpdateValidator:
+    def __init__(self, current_user: User, user_changing: User):
+        self.current_user = current_user
+        self.user_changing = user_changing
+
+    def check_user_update_self_profile(self):
+        if not self.current_user == self.user_changing:
+            raise serializers.ValidationError({"detail": _("You can change only your profile.")})
 
 
 def is_driver(func):
