@@ -3,7 +3,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from rest_framework import serializers
 
 from car_delivery.models import DrivingLicense
-from .models import User, DriverProfile
+from .models import User, DriverProfile, ProfileComment
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -43,3 +43,15 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.role = self.data.get('role')
         user.save()
         return user
+
+
+class DriverProfileCommentSerializer(serializers.ModelSerializer):
+    author = UserSerializer()
+
+    class Meta:
+        model = ProfileComment
+        fields = ['id', 'author', 'content', 'parent_comment']
+
+    def to_representation(self, instance):
+        self.fields['parent'] = DriverProfileCommentSerializer(read_only=True)
+        return super(DriverProfileCommentSerializer, self).to_representation(instance)

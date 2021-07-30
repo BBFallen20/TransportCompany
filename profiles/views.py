@@ -1,14 +1,15 @@
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
-from rest_framework.generics import UpdateAPIView
+from rest_framework.generics import UpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import DriverProfile
-from .serializers import UpdateDriverProfileSerializer
+from .models import DriverProfile, ProfileComment
+from .serializers import UpdateDriverProfileSerializer, DriverProfileCommentSerializer
 from .services import is_driver, DriverProfileUpdateValidator
 
 
-class DriverProfileView(UpdateAPIView):
+class DriverProfileUpdateView(UpdateAPIView):
     serializer_class = UpdateDriverProfileSerializer
     permission_classes = [IsAuthenticated]
 
@@ -28,3 +29,16 @@ class DriverProfileView(UpdateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+
+class DriverProfileCommentListView(ListAPIView):
+    serializer_class = DriverProfileCommentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        driver_profile = DriverProfile.objects.filter(user=self.request.user).first()
+        comments = ProfileComment.objects.filter(
+            profile_id=driver_profile.id,
+            comment_profile=ContentType.objects.get_for_model(driver_profile).id,
+        )
+        return comments
