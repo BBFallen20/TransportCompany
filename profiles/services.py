@@ -14,7 +14,7 @@ class DriverProfileUpdateValidator:
 
     def check_user_update_self_profile(self):
         if not self.current_user == self.user_changing:
-            raise serializers.ValidationError(_("You can change only your profile."))
+            raise serializers.ValidationError({"detail": _("You can change only your profile.")})
 
 
 def is_driver(func):

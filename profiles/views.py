@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
+from rest_framework import serializers
 from rest_framework.generics import UpdateAPIView, ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -37,10 +38,10 @@ class DriverProfileCommentListView(ListAPIView):
 
     def get_queryset(self):
         driver_profile = DriverProfile.objects.filter(user__id=self.kwargs.get('pk')).first()
-        comments = Response('Profile not found.')
         if driver_profile:
             comments = ProfileComment.objects.filter(
                 profile_id=driver_profile.id,
                 comment_profile=ContentType.objects.get_for_model(driver_profile).id,
             )
-        return comments
+            return comments
+        raise serializers.ValidationError({'detail': "Profile not found."})
