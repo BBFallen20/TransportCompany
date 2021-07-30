@@ -1,9 +1,9 @@
-from rest_framework.serializers import ModelSerializer
 from rest_framework.fields import CharField
+from rest_framework.serializers import ModelSerializer
 
+from profiles.models import DriverProfile
 from profiles.serializers import UserSerializer
 from .models import Vehicle, DrivingLicense, Race
-from profiles.models import DriverProfile
 from .services import RaceCreationValidator
 
 

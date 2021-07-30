@@ -34,6 +34,7 @@ class Race(models.Model):
         PENDING = _('P'), _('PENDING')
         ENDED = _('E'), _('ENDED')
         CANCELED = _('C'), _('CANCELED')
+
     vehicle = models.ForeignKey(
         'Vehicle',
         on_delete=models.CASCADE,

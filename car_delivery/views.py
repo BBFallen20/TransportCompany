@@ -1,12 +1,11 @@
 from django.db import transaction
-from django.utils.translation import ugettext_lazy as _
 from rest_framework import generics
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.views import Response
 
+from profiles.models import DriverProfile
 from profiles.services import is_driver
 from .models import Vehicle, Race
-from profiles.models import DriverProfile
 from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
 
 

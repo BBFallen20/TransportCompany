@@ -11,7 +11,7 @@ class User(AbstractUser):
         DRIVER = _('D'), _('DRIVER')
         GUEST = _('G'), _('GUEST')
 
-    role = models.CharField(max_length=1, choices=RoleChoice.choices, default='G', verbose_name='User role')
+    role = models.CharField(max_length=1, choices=RoleChoice.choices, default='G', verbose_name=_('User role'))
 
     REQUIRED_FIELDS = ['email', 'role']
 
@@ -38,6 +38,12 @@ class ProfileComment(models.Model):
         verbose_name=_('Parent comment')
     )
 
+    def __str__(self):
+        return f"Comment to {self.profile} by {self.author}"
+
+    def __repr__(self):
+        return f"Comment(to {self.profile} by {self.author})"
+
     @property
     def child_list(self):
         return ProfileComment.objects.filter(parent_comment=self)
@@ -45,6 +51,10 @@ class ProfileComment(models.Model):
     @property
     def is_parent(self):
         return True if self.parent_comment is not None else False
+
+    class Meta:
+        verbose_name = _('Comment')
+        verbose_name_plural = _('Comments')
 
 
 class DriverProfile(models.Model):
@@ -61,13 +71,17 @@ class DriverProfile(models.Model):
 
     def __str__(self) -> str:
         return f"Driver#{self.id} {self.first_name} {self.last_name} " \
-               f"Categories: {','.join(map(lambda x: x.title, self.get_license_list))}."
+               f"Categories: {','.join(map(lambda x: x.title, self.license_list))}."
 
     def __repr__(self) -> str:
         return f"Driver({self.first_name} {self.last_name})"
 
     @property
-    def get_license_list(self) -> list:
+    def comments_list(self) -> list:
+        return [comment for comment in self.comments.all()]
+
+    @property
+    def license_list(self) -> list:
         return [driver_license for driver_license in self.driving_license.all()]
 
     class Meta:

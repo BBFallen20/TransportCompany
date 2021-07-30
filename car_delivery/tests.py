@@ -1,8 +1,9 @@
 from django.test import TestCase
-from .models import Vehicle, DrivingLicense, Race
-from profiles.models import User, DriverProfile
-from .services import RaceCreationValidator
 from rest_framework.exceptions import ValidationError
+
+from profiles.models import User, DriverProfile
+from .models import Vehicle, DrivingLicense, Race
+from .services import RaceCreationValidator
 
 
 class InitSetter(TestCase):

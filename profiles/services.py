@@ -38,6 +38,7 @@ def is_driver(func):
         if request.user.RoleChoice.DRIVER == request.user.role:
             return func(self, request)
         return Response({'detail': _('Driver role required to view this page.')}, 401)
+
     return outer
 
 
