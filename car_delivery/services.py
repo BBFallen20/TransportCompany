@@ -6,7 +6,6 @@ from rest_framework import serializers
 
 class RaceCreationValidator:
     """Race objects creating validator."""
-
     def __init__(self, data: dict):
         self.vehicle = data.get('vehicle')
         self.driver = data.get('driver')

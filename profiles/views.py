@@ -1,11 +1,13 @@
 from django.db import transaction
-from rest_framework.generics import UpdateAPIView, ListAPIView
+from rest_framework import status
+from rest_framework.generics import UpdateAPIView, ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from .models import DriverProfile
-from .serializers import UpdateDriverProfileSerializer, DriverProfileCommentSerializer
-from .services import is_driver, DriverProfileUpdateValidator, ProfileCommentValidator
+from .models import DriverProfile, ProfileComment
+from .serializers import UpdateDriverProfileSerializer, DriverProfileCommentSerializer, \
+    DriverProfileCommentCreateSerializer
+from .services import is_driver, DriverProfileUpdateValidator, ProfileCommentValidator, ProfileCommentCreateValidator
 
 
 class DriverProfileUpdateView(UpdateAPIView):
@@ -36,3 +38,27 @@ class DriverProfileCommentListView(ListAPIView):
 
     def get_queryset(self):
         return ProfileCommentValidator(self.kwargs.get('pk'), 'driver').get_profile_comments()
+
+
+class DriverProfileCommentCreateView(CreateAPIView):
+    serializer_class = DriverProfileCommentCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer = ProfileCommentCreateValidator(
+            serializer,
+            self.kwargs.get('pk'),
+            self.kwargs.get('parent')
+        ).update_serializer_data()
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            {'detail': 'Successfully created new comment.'},
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+
+    def get_queryset(self):
+        return ProfileComment.objects.all()

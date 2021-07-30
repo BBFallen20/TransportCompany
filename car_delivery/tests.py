@@ -20,7 +20,7 @@ class InitSetter(TestCase):
 class VehicleTestCase(InitSetter):
     def test_vehicle_get_drivers_count(self):
         vehicle = Vehicle.objects.get(id=1)
-        self.assertEqual(vehicle.get_drivers_count, 1)
+        self.assertEqual(vehicle.drivers_count, 1)
         self.assertEqual(vehicle.race_set.count(), 1)
 
 

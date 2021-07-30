@@ -20,7 +20,7 @@ class Vehicle(models.Model):
         return f"Car({self.id} - {self.mark} {self.model})"
 
     @property
-    def get_drivers_count(self) -> int:
+    def drivers_count(self) -> int:
         return len(set(list(map(lambda x: x.driver, self.race_set.all()))))
 
     class Meta:

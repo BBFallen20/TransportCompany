@@ -32,7 +32,7 @@ class VehicleUnusedListView(generics.ListAPIView):
         return Response(serializer.data)
 
     def get_queryset(self) -> list:
-        return [vehicle if vehicle.get_drivers_count == 0 else None for vehicle in Vehicle.objects.all()]
+        return [vehicle if vehicle.drivers_count == 0 else None for vehicle in Vehicle.objects.all()]
 
 
 class DriverListView(generics.ListAPIView):
