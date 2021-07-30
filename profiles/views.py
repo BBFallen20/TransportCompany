@@ -17,9 +17,14 @@ class DriverProfileView(UpdateAPIView):
 
     @is_driver
     @transaction.atomic
-    def put(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
         DriverProfileUpdateValidator(
             current_user=request.user,
-            user_changing=self.get_object().user
+            user_changing=instance.user
         ).check_user_update_self_profile()
-        return self.update(request, *args, **kwargs)
+        partial = kwargs.pop('partial', False)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
