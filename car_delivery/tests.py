@@ -7,7 +7,7 @@ from rest_framework.exceptions import ValidationError
 
 class InitSetter(TestCase):
     def setUp(self) -> None:
-        User.objects.create(email='danilko123@ukr.net', password='123123', role='D')
+        User.objects.create(username='gsdfgdsf', email='danilko123@ukr.net', password='123123', role='D')
         DrivingLicense.objects.create(title='B')
         Vehicle.objects.create(model='Sonata', mark='Hyundai', drivers_limit=1, driving_category_id=1)
         Vehicle.objects.create(model='Sonata', mark='Hyundai', drivers_limit=1, driving_category_id=1)
