@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils.translation import ugettext_lazy as _
 from rest_framework import status
 from rest_framework.generics import UpdateAPIView, ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -46,16 +47,18 @@ class DriverProfileCommentCreateView(CreateAPIView):
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
+        """Creating new comment to driver profile with/without parent comment"""
         serializer = self.serializer_class(data=request.data)
         serializer = ProfileCommentCreateValidator(
             serializer,
             self.kwargs.get('pk'),
-            self.kwargs.get('parent')
+            self.kwargs.get('parent'),
+            self.request.user.id
         ).update_serializer_data()
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
         return Response(
-            {'detail': 'Successfully created new comment.'},
+            {'detail': _('Successfully created new comment.')},
             status=status.HTTP_201_CREATED,
             headers=headers
         )

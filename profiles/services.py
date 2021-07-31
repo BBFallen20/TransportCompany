@@ -39,43 +39,52 @@ class ProfileCommentValidator:
 
 class ProfileCommentCreateValidator:
     """Profile comment creating validator"""
-    def __init__(self, serializer: DriverProfileCommentCreateSerializer, pk: int, parent: int or None = None):
+
+    def __init__(self, serializer: DriverProfileCommentCreateSerializer, pk: int, parent: int or None = None,
+                 author_id: int = 0):
         self.serializer = serializer
         self.pk = pk
         self.parent = parent
+        self.author_id = author_id
         self.fields = {
-            'author': self.get_author(),
-            'profile_id': self.get_driver_profile_id(),
-            'comment_profile': ContentType.objects.get_for_model(DriverProfile),
-            'parent_comment': self.get_parent_comment() if self.parent else None
+            'author': self.get_author,
+            'profile_id': self.get_driver_profile_id,
+            'parent_comment': self.get_parent_comment
         }
 
     def get_driver_profile_id(self) -> DriverProfile:
-        return DriverProfile.objects.get(user_id=self.get_author().id).id
+        if DriverProfile.objects.filter(user_id=self.pk).exists():
+            return DriverProfile.objects.get(user_id=self.pk).id
+        raise serializers.ValidationError({'detail': _('Profile with such id does not exist.')})
 
     def get_author(self) -> User:
-        if User.objects.filter(id=self.pk).exists():
-            return User.objects.get(id=self.pk)
+        if User.objects.filter(id=self.author_id).exists():
+            return User.objects.get(id=self.author_id)
         raise serializers.ValidationError({'detail': _('User with such id does not exist.')})
 
-    def get_parent_comment(self) -> ProfileComment:
-        if ProfileComment.objects.filter(id=self.parent).exists():
-            return ProfileComment.objects.get(id=self.parent)
-        raise serializers.ValidationError({'detail': _('Error while saving parent comment.')})
+    def get_parent_comment(self) -> ProfileComment or None:
+        if self.parent:
+            if ProfileComment.objects.filter(id=self.parent).exists():
+                return ProfileComment.objects.get(id=self.parent)
+            raise serializers.ValidationError({'detail': _('Error while saving parent comment.')})
+        return None
 
     def update_serializer_data(self):
         self.serializer.is_valid()
+        self.serializer.validated_data['comment_profile'] = ContentType.objects.get_for_model(DriverProfile)
         for field in self.fields.keys():
-            self.serializer.validated_data[field] = self.fields.get(field)
+            self.serializer.validated_data[field] = self.fields.get(field)()
         return self.serializer
 
 
 def is_driver(func):
     """Decorator which check if user has role DRIVER"""
+
     def outer(self, request, **kwargs):
         if request.user.RoleChoice.DRIVER == request.user.role:
             return func(self, request)
         return Response({'detail': _('Driver role required to view this page.')}, 401)
+
     return outer
 
 
