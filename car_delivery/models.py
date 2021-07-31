@@ -20,7 +20,7 @@ class Vehicle(models.Model):
         return f"Car({self.id} - {self.mark} {self.model})"
 
     @property
-    def get_drivers_count(self) -> int:
+    def drivers_count(self) -> int:
         return len(set(list(map(lambda x: x.driver, self.race_set.all()))))
 
     class Meta:
@@ -34,6 +34,7 @@ class Race(models.Model):
         PENDING = _('P'), _('PENDING')
         ENDED = _('E'), _('ENDED')
         CANCELED = _('C'), _('CANCELED')
+
     vehicle = models.ForeignKey(
         'Vehicle',
         on_delete=models.CASCADE,
@@ -51,10 +52,6 @@ class Race(models.Model):
     pickup_location = models.CharField(max_length=300, verbose_name=_('Race products pickup location'))
     supply_location = models.CharField(max_length=300, verbose_name=_('Race products supply location'))
     status = models.CharField(max_length=1, choices=RaceChoice.choices, default='P', verbose_name=_('Race status'))
-
-    @staticmethod
-    def get_available_vehicles(self) -> Vehicle:
-        return Vehicle.objects.filter(using=False)
 
     def __str__(self) -> str:
         return f"Race#{self.id} {self.status} {self.pickup_time}-{self.supply_time}"

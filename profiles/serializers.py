@@ -55,3 +55,14 @@ class DriverProfileCommentSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         self.fields['child_comments'] = DriverProfileCommentSerializer(read_only=True, source='child_list', many=True)
         return super(DriverProfileCommentSerializer, self).to_representation(instance)
+
+
+class DriverProfileCommentCreateSerializer(serializers.ModelSerializer):
+    author = serializers.HiddenField(default='')
+    profile_id = serializers.HiddenField(default='')
+    comment_profile = serializers.HiddenField(default='')
+    parent_comment = serializers.HiddenField(default=None)
+
+    class Meta:
+        model = ProfileComment
+        fields = ['author', 'content', 'profile_id', 'comment_profile', 'parent_comment']

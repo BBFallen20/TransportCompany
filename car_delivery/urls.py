@@ -1,6 +1,8 @@
 from django.urls import path
+
 from .views import VehicleListView, VehicleUnusedListView, DriverListView, AllRaceListView, \
     RaceCreateView, DriverRaceListView
+
 
 urlpatterns = [
     # Vehicles routing
