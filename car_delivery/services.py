@@ -28,7 +28,7 @@ class RaceCreationValidator:
                 raise serializers.ValidationError(_("This driver already has race at this time."))
 
     def check_driving_category(self) -> None:
-        if self.vehicle.driving_category not in self.driver.get_license_list:
+        if self.vehicle.driving_category not in self.driver.license_list:
             raise serializers.ValidationError(_("Driver has not required driving license."))
 
     def check_all(self) -> None:
