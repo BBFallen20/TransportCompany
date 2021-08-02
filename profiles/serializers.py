@@ -26,7 +26,7 @@ class UpdateDriverProfileSerializer(serializers.ModelSerializer):
             'last_name': {'required': True},
         }
 
-    def update(self, instance, validated_data):
+    def update(self, instance, validated_data):  # pragma: no cover
         instance.first_name = validated_data['first_name']
         instance.last_name = validated_data['last_name']
         instance.driving_license.set(validated_data['driving_license'])
@@ -38,7 +38,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     role = serializers.ChoiceField(choices=User.RoleChoice.choices)
 
     @transaction.atomic
-    def save(self, request):
+    def save(self, request):  # pragma: no cover
         user = super().save(request)
         user.role = self.data.get('role')
         user.save()
@@ -52,7 +52,7 @@ class DriverProfileCommentSerializer(serializers.ModelSerializer):
         model = ProfileComment
         fields = ['id', 'author', 'content']
 
-    def to_representation(self, instance):
+    def to_representation(self, instance):  # pragma: no cover
         self.fields['child_comments'] = DriverProfileCommentSerializer(read_only=True, source='child_list', many=True)
         return super(DriverProfileCommentSerializer, self).to_representation(instance)
 

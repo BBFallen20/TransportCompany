@@ -22,7 +22,7 @@ class VehicleSerializer(ModelSerializer):
 
 
 class DriverSerializer(ModelSerializer):
-    license_list = DrivingLicenseSerializer(source='get_license_list', many=True)
+    license_list = DrivingLicenseSerializer(many=True)
     user = UserSerializer()
 
     class Meta:
