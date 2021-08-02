@@ -65,7 +65,7 @@ class Race(models.Model):
 
 
 class DrivingLicense(models.Model):
-    title = models.CharField(max_length=10, verbose_name=_('License title'))
+    title = models.CharField(max_length=10, verbose_name=_('License title'), unique=True)
 
     def __str__(self) -> str:
         return f"License {self.title}"

@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.views import Response
 
 from profiles.models import DriverProfile
-from profiles.services import is_driver
+from profiles.permissions import IsDriver
 from .models import Vehicle, Race
 from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
 
@@ -73,7 +73,7 @@ class RaceCreateView(generics.CreateAPIView):
 
 class DriverRaceListView(generics.ListAPIView):
     serializer_class = RaceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsDriver]
 
     def get_queryset(self) -> Race or None:
         queries = {
@@ -84,7 +84,6 @@ class DriverRaceListView(generics.ListAPIView):
         }
         return queries.get(self.kwargs.get('status'))
 
-    @is_driver
     def list(self, request, *args, **kwargs) -> Response:
         races = self.get_queryset()
         serializer = RaceSerializer(races, many=True, context={'request': request})
