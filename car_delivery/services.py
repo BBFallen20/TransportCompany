@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from functools import wraps
 
 from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
@@ -68,3 +69,13 @@ def get_races_csv(queryset):
         )
     writer.writerows(output)
     return response
+
+
+def csv_exportable(f):
+    @wraps(f)
+    def wrapper(self, *args, **kw):
+        if 'export' not in self.request.get_full_path():
+            return f(self, *args, **kw)
+        return get_races_csv(self.get_queryset())
+    return wrapper
+
