@@ -1,5 +1,7 @@
+import csv
 from datetime import datetime
 
+from django.http import HttpResponse
 from django.utils.translation import ugettext_lazy as _
 from rest_framework import exceptions
 
@@ -44,3 +46,16 @@ class RaceCreationValidator:
         self.check_limit_availability()
         self.check_driver_busy()
         self.check_driving_category()
+
+
+def get_races_csv(queryset):
+    output = []
+    response = HttpResponse(content_type='text/csv')
+    writer = csv.writer(response)
+    writer.writerow(['Driver', 'Vehicle', 'Supply time', 'Pickup time', 'Supply location', 'Pickup location'])
+    for race in queryset:
+        output.append(
+            [race.driver, race.vehicle, race.supply_time, race.pickup_time, race.supply_location, race.pickup_location]
+        )
+    writer.writerows(output)
+    return response

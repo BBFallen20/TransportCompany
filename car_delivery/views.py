@@ -7,6 +7,7 @@ from profiles.models import DriverProfile
 from profiles.permissions import IsDriver
 from .models import Vehicle, Race
 from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
+from .services import get_races_csv
 
 
 class VehicleListView(generics.ListAPIView):
@@ -87,4 +88,6 @@ class DriverRaceListView(generics.ListAPIView):
     def list(self, request, *args, **kwargs) -> Response:
         races = self.get_queryset()
         serializer = RaceSerializer(races, many=True, context={'request': request})
-        return Response(serializer.data)
+        if 'export' not in self.request.get_full_path():
+            return Response(serializer.data)
+        return get_races_csv(races)
