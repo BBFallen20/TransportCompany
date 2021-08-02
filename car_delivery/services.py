@@ -8,6 +8,7 @@ from rest_framework import exceptions
 
 class RaceCreationValidator:
     """Race objects creating validator."""
+
     def __init__(self, data: dict):
         self.vehicle = data.get('vehicle')
         self.driver = data.get('driver')
@@ -52,10 +53,18 @@ def get_races_csv(queryset):
     output = []
     response = HttpResponse(content_type='text/csv')
     writer = csv.writer(response)
-    writer.writerow(['Driver', 'Vehicle', 'Supply time', 'Pickup time', 'Supply location', 'Pickup location'])
+    writer.writerow(['Driver', 'Vehicle', 'Supply time', 'Pickup time', 'Supply location', 'Pickup location', 'Status'])
     for race in queryset:
         output.append(
-            [race.driver, race.vehicle, race.supply_time, race.pickup_time, race.supply_location, race.pickup_location]
+            [
+                race.driver,
+                race.vehicle,
+                race.supply_time,
+                race.pickup_time,
+                race.supply_location,
+                race.pickup_location,
+                race.status
+            ]
         )
     writer.writerows(output)
     return response
