@@ -50,24 +50,20 @@ class RaceCreationValidator:
         self.check_driving_category()
 
 
-def get_races_csv(queryset):
+def get_csv(queryset):
     output = []
+    row_names = []
+    exclude_row_names = ['id', '_state']
     response = HttpResponse(content_type='text/csv')
     writer = csv.writer(response)
-    writer.writerow(['Driver', 'Vehicle', 'Supply time', 'Pickup time', 'Supply location', 'Pickup location', 'Status'])
-    for race in queryset:
-        output.append(
-            [
-                race.driver,
-                race.vehicle,
-                race.supply_time,
-                race.pickup_time,
-                race.supply_location,
-                race.pickup_location,
-                race.status
-            ]
-        )
-    writer.writerows(output)
+    if queryset[0]:
+        for row_name in queryset[0].__dict__.keys():
+            if row_name not in exclude_row_names:
+                row_names.append(row_name)
+        writer.writerow(row_names)
+        for race in queryset:
+            output.append([getattr(race, attribute) for attribute in row_names])
+        writer.writerows(output)
     return response
 
 
@@ -76,6 +72,5 @@ def csv_exportable(f):
     def wrapper(self, *args, **kw):
         if 'export' not in self.request.get_full_path():
             return f(self, *args, **kw)
-        return get_races_csv(self.get_queryset())
+        return get_csv(self.get_queryset())
     return wrapper
-

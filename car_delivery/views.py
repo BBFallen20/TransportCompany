@@ -7,14 +7,14 @@ from profiles.models import DriverProfile
 from profiles.permissions import IsDriver
 from .models import Vehicle, Race
 from .serializers import VehicleSerializer, DriverSerializer, RaceSerializer, RaceCreateSerializer
-from .services import get_races_csv, csv_exportable
+from .services import csv_exportable
 
 
 class VehicleListView(generics.ListAPIView):
     """Vehicle objects list API"""
     serializer_class = VehicleSerializer
 
-    def list(self, request) -> Response:
+    def list(self, request, **kwargs) -> Response:
         cars = self.get_queryset()
         serializer = self.serializer_class(cars, many=True, context={"request": request})
         return Response(serializer.data)
@@ -27,7 +27,7 @@ class VehicleUnusedListView(generics.ListAPIView):
     """Unused vehicle objects list API"""
     serializer_class = VehicleSerializer
 
-    def list(self, request) -> Response:
+    def list(self, request, **kwargs) -> Response:
         cars = self.get_queryset()
         serializer = VehicleSerializer(cars, many=True, context={"request": request})
         return Response(serializer.data)
@@ -40,7 +40,7 @@ class DriverListView(generics.ListAPIView):
     """Driver objects list API"""
     serializer_class = DriverSerializer
 
-    def list(self, request) -> Response:
+    def list(self, request, **kwargs) -> Response:
         drivers = self.get_queryset()
         serializer = DriverSerializer(drivers, many=True, context={'request': request})
         return Response(serializer.data)
@@ -53,7 +53,7 @@ class AllRaceListView(generics.ListAPIView):
     """Vehicle-driver relation objects list API"""
     serializer_class = RaceSerializer
 
-    def list(self, request) -> Response:
+    def list(self, request, **kwargs) -> Response:
         races = self.get_queryset()
         serializer = RaceSerializer(races, many=True, context={'request': request})
         return Response(serializer.data)

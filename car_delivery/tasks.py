@@ -9,8 +9,8 @@ from transport_company.settings import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 
 REPORT_TEMPLATE = """
 Hi there, {{ username }}!
-You have upcoming race at: {{ race_time }}. 
-Pickup location: 
+You have upcoming race at: {{ race_time }} 
+Pickup location: {{ pickup_location }}.
 """
 
 

@@ -27,7 +27,7 @@ class InitSetter(TestCase):
 class RaceValidatorTestCase(TestCase):
     def setUp(self) -> None:
         InitSetter().setUp()
-        user = User.objects.get_or_create(username='asdads', email='1234@ukr.net', password='123123', role='D')
+        User.objects.get_or_create(username='asdads', email='1234@ukr.net', password='123123', role='D')
         driver = DriverProfile.objects.get(id=2)
         driver.driving_license.add(1)
         self.validator = RaceCreationValidator(
