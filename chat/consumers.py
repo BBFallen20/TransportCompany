@@ -60,6 +60,7 @@ class OneToOneChatConsumer(AsyncWebsocketConsumer):
                 await self.send(text_data=json.dumps({
                     'message': message.text,
                     'user': user,
+                    'mode': 'init'
                 }))
                 self.messages[self.scope['user'].username].append(message.text)
 
@@ -105,4 +106,5 @@ class OneToOneChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message,
             'user': user,
+            'mode': 'default'
         }))

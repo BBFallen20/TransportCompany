@@ -20,6 +20,13 @@ class ChatMessageSerializer(serializers.ModelSerializer):
         fields = ['author', 'text', 'sent_at']
 
 
+class ChatMessageCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ChatMessage
+        fields = ['text']
+
+
 class ChatRoomSerializer(serializers.ModelSerializer):
     members = ChatMemberSerializer(source='members_list', many=True)
 
