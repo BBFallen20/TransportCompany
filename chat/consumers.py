@@ -28,7 +28,7 @@ class OneToOneChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
-        self.chat_service = ChatService(
+        self.chat_service = await sync_to_async(ChatService)(
             room_name=self.room_name,
             current_user=self.scope['user'],
             users=self.users,
