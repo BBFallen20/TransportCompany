@@ -13,18 +13,6 @@ class OneToOneChatConsumer(AsyncWebsocketConsumer):
     users: list = []
     messages: dict = {}
 
-    async def initialize_chat(self):
-        """Sending existing chat messages"""
-        for message in await sync_to_async(self.chat_service.get_messages, thread_sensitive=True)():
-            user = await sync_to_async(self.chat_service.get_member_username, thread_sensitive=True)(message.member)
-            if message.text not in self.messages[self.scope['user'].username]:
-                await self.send(text_data=json.dumps({
-                    'message': message.text,
-                    'user': user,
-                    'mode': 'init'
-                }))
-                self.messages[self.scope['user'].username].append(message.text)
-
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = 'chat_%s' % self.room_name
@@ -45,8 +33,6 @@ class OneToOneChatConsumer(AsyncWebsocketConsumer):
                 self.channel_name
             )
             await self.accept()
-            # Initialize existing chat messages and send them to the user
-            await self.initialize_chat()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -73,5 +59,4 @@ class OneToOneChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': message,
             'user': user,
-            'mode': 'default'
         }))

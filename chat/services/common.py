@@ -9,13 +9,6 @@ class ChatService:
         self.users = users
         self.messages = messages
 
-    def get_messages(self):
-        messages = []
-        for message_set in self.room_object.messages_list:
-            for message in message_set:
-                messages.append(message)
-        return messages
-
     def get_or_create_chatroom(self):
         obj, d = ChatRoom.objects.get_or_create(title=self.room_name, members_limit=2)
         return obj
