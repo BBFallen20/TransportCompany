@@ -97,18 +97,25 @@ CHANNEL_LAYERS = {
 DATABASES = {
     'default': {
 
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.sqlite3',
 
-        'NAME': 'd887emcfqvs67p',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 
-        'USER': 'ubkpcngtdhzojh',
-
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-
-        'HOST': 'ec2-44-194-225-27.compute-1.amazonaws.com',
-
-        'PORT': '5432',
     }
+    # 'default': {
+    #
+    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    #
+    #     'NAME': 'd887emcfqvs67p',
+    #
+    #     'USER': 'ubkpcngtdhzojh',
+    #
+    #     'PASSWORD': os.environ.get('DB_PASSWORD'),
+    #
+    #     'HOST': 'ec2-44-194-225-27.compute-1.amazonaws.com',
+    #
+    #     'PORT': '5432',
+    # }
 }
 
 AUTH_PASSWORD_VALIDATORS = [
