@@ -119,6 +119,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+LOGIN_URL = '/api/rest-auth/login/'
+
 REDIS_HOST = 'localhost'
 REDIS_PORT = '6379'
 CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
