@@ -85,7 +85,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'transport_company.wsgi.application'
-
+ASGI_APPLICATION = "transport_company.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 DATABASES = {
     'default': {
 
