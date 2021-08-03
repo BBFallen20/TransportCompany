@@ -1,2 +1,2 @@
 web: gunicorn transport_company.wsgi --log-file -
-celery: celery worker -A transport_company -l info -c 4
+celery: celery -A transport_company worker
